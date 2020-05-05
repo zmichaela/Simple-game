@@ -10,13 +10,14 @@ let coinHeight = coin.height;
 let coinWidth = coin.width;
 
 
-let scoreDiv = document.querySelector("#score");
+let score = document.querySelector("#score");
+let scoreCount = 0;
 let music = document.querySelector("#music");
 let coinSound = document.querySelector("#coinsound");
 let fanfara = document.querySelector("#fanfara");
-let scoreCount = 0;
 
-//Umistime panacka na stranku
+
+//Place the man on the page
 function placeMan() {
 	man.style.left = manX + "px";
 	man.style.top = manY + "px";
@@ -24,7 +25,7 @@ function placeMan() {
 placeMan();
 
 
-//Umistime minci na stranku
+//Place the coin on the page
 function placeCoin() {
 	coin.style.left = coinX + "px";
 	coin.style.top = coinY + "px";	
@@ -32,7 +33,7 @@ function placeCoin() {
 placeCoin();
 
 
-//Zmena pozice mince - nahodne souradnice
+//Change the coin position
 function moveCoin () {
 	let newWidth = Math.floor(Math.random() * window.innerWidth);
 	let newHeight = Math.floor(Math.random() * window.innerHeight);
@@ -40,15 +41,19 @@ function moveCoin () {
 	coin.style.top = newHeight + "px";
 }
 
-// pocitadlo
-function pocitadlo () {
-    scoreCount += 1;
-    scoreDiv.textContent = scoreCount;
-    moveCoin();
+
+//Count score
+function countScore () {	
+	scoreCount += 1;
+	score.textContent = scoreCount;
+	if (scoreCount === 5) {
+		fanfara.play();  
+		return score.textContent = "You won this game. Well done!";
+   }
 }
 
 
-// Pohybujeme panackem
+// Moving the man
 function movingKeyboard(event) {
 	let keyboard = event.key;
 	if (keyboard === 'ArrowRight'){
@@ -81,19 +86,11 @@ function movingKeyboard(event) {
 	if (!(manX + manWidth < coinX || coinX + coinWidth < manX || 
 	manY + manHeight < coinY || coinY + coinHeight < manY)) {
         coinSound.play();
-        pocitadlo();
-        if (score === 5) {
-          fanfara.play();  
-          scoreDiv.textContent = "You won this game. Well done!";
+		countScore();
+		moveCoin();
 	} 
     music.play();
   }
-}
-/*
-ZADÁNÍ DÚ:
-1) při změně směru změň obrázek panáčka;
-2) když se srazí panáček s mincí, mince se přesune na jinou, náhodně vygenerovanou pozici (pozor na omezení šířky a výšky okna!)
-3) vytvoř proměnnou, ve které se bude zvyšovat skóre po setkání panáčka a mince. Toto skóre se bude zobrazovat na stránce
 
-BONUS) doplňte hru o zvuky :)
-*/
+
+
